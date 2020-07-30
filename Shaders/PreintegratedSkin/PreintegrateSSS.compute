@@ -1,0 +1,51 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+float gaussian(float v, float r)
+{
+    const float PI = 3.1415926536;
+    return 1.0 / sqrt(2.0 * PI * v) * exp(-r * r / (2.0 * v));
+}
+
+float3 R(float r)
+{
+    return gaussian(.0064 * 1.414, r) * float3(0.233, 0.455, 0.649)
+                        + gaussian(.0484 * 1.414, r) * float3(0.1, 0.336, 0.344)
+                        + gaussian(.187 * 1.414, r) * float3(0.118, 0.198, 0)
+                        + gaussian(.567 * 1.414, r) * float3(0.113, .007, .007)
+                        + gaussian(1.99 * 1.414, r) * float3(.358, .004, 0)
+                        + gaussian(7.41 * 1.414, r) * float3(.078, 0, 0);
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    const float PI = 3.1415926536;
+    const int Samples = 128;
+    uint width, height;
+    Result.GetDimensions(width, height);
+    float r = 2.0f * float(height) / max(id.y, 0.0001);
+    float HdotL = lerp(-1, 1, id.x / float(width));
+    float Theta = acos(HdotL);
+    float step = PI / Samples;
+    float3 numerator = 0;
+    float3 denominator = 0;
+    
+    for (float x = -0.5 * PI; x <= 0.5 * PI; x += step)
+    {
+        //float3 RTerm = R(r);
+        float sampleDist = abs(2.0 * r * sin(x * 0.5));
+        float3 RTerm = R(sampleDist);
+        numerator += saturate(cos(Theta + x)) * RTerm;
+        denominator += RTerm;
+    }
+    float3 integrad = numerator / denominator;
+    
+
+    Result[id.xy] = float4(integrad, 1.0);
+}
