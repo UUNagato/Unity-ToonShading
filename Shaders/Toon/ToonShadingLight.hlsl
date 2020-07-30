@@ -1,13 +1,6 @@
 #ifndef TOONSHADING_LIGHT_HEADER
 #define TOONSHADING_LIGHT_HEADER
 
-struct SurfaceData
-{
-    half4 albedo;
-    half3 normalWS;
-    half3 viewDirectionWS;
-};
-
 half3 getDiffuseRamp(half NdotL)
 {
     half factor1 = smoothstep(_LMOffset - _DiffuseSoftness, _LMOffset + _DiffuseSoftness, NdotL);

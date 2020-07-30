@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2276910480992877859
+--- !u!114 &-6620706258141629847
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ToonBody
-  m_Shader: {fileID: 4800000, guid: 2c46375afbd3fbd4fa47a945f7cbf0f2, type: 3}
+  m_Name: ToonHair
+  m_Shader: {fileID: 4800000, guid: fd201722257238f42a40b75a7d0f80a1, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -45,23 +45,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: cc51a9a8397e3c5498dda60419ad3ec9, type: 3}
+        m_Texture: {fileID: 2800000, guid: cbb65ec17f92eb44fb0dde6381b6a415, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _NormalMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShiftTex:
+        m_Texture: {fileID: 2800000, guid: 3141ae647aa98a0449626512f5188ed2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -74,33 +70,38 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DiffuseSoftness: 0.5
+    - _DiffuseSoftness: 0.2
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IndirectLightingStrength: 0.2
-    - _LMOffset: -0.67
-    - _MHOffset: 0.2
+    - _IndirectLightingStrength: 0.32
+    - _LMOffset: -0.7
+    - _MHOffset: 0.4
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _ShiftOffset: 0.826
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _SpecularHighShiftExp: 500
     - _SpecularHighlights: 1
+    - _SpecularLowShiftExp: 300
+    - _SpecularPower: 0.5
     - _SrcBlend: 1
     - _Surface: 0
-    - _UseNormalMap: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DiffuseColorHigh: {r: 0.9433962, g: 0.87664646, b: 0.8783152, a: 1}
-    - _DiffuseColorLow: {r: 0.7830189, g: 0.38781595, b: 0.38781595, a: 1}
-    - _DiffuseColorMed: {r: 0.8773585, g: 0.63462055, b: 0.624911, a: 1}
+    - _DiffuseColorHigh: {r: 0.9433962, g: 0.91505426, b: 0.87664646, a: 1}
+    - _DiffuseColorLow: {r: 0.6792453, g: 0.48617023, b: 0.43253827, a: 1}
+    - _DiffuseColorMed: {r: 0.8679245, g: 0.7806718, b: 0.7164471, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _IndirectLightingColor: {r: 1, g: 0, b: 0, a: 1}
+    - _IndirectLightingColor: {r: 1, g: 0, b: 0.10518694, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecularColorHigh: {r: 1, g: 0.9939415, b: 0.8349056, a: 1}
+    - _SpecularColorLow: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 0.7}

@@ -1,4 +1,4 @@
-﻿Shader "ToonShading/ToonSkin"
+﻿Shader "ToonShading/Hair"
 {
     Properties
     {
@@ -11,12 +11,18 @@
         _MHOffset("Med High Point", Range(-1, 1)) = 0.7
         _DiffuseSoftness("Softness", Range(0, 0.5)) = 0.05
 
-        [Toggle(_NORMALMAP)]_UseNormalMap("Use Normal Map", Int) = 0
-        _NormalTex ("Normal Map", 2D) = "bump" {}
-
         [Header(IndirectLighting)]
         [HDR]_IndirectLightingColor("Indirect Light Constant", Color) = (1, 0, 0, 1)
         _IndirectLightingStrength("Indirect Strength", Range(0, 10)) = 0.5
+
+        [Header(Hair)]
+        _ShiftTex ("Hair ShiftMap", 2D) = "black" {}
+        [HDR]_SpecularColorLow("Specular Color Low", Color) = (0.7, 0.7, 0.7, 0.7)
+        [HDR]_SpecularColorHigh("Specular Color High", Color) = (1, 1, 1, 1)
+        _ShiftOffset("Specular Offset", Range(-1, 1)) = 0
+        _SpecularLowShiftExp("Low Specular Exponent", Range(1, 500)) = 20
+        _SpecularHighShiftExp("High Specular Exponent", Range(1, 500)) = 50
+        _SpecularPower("Highlight Power", Range(0, 3)) = 0.8
     }
     SubShader
     {
@@ -33,13 +39,11 @@
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
-
-            #pragma shader_feature _NORMALMAP
-
             #pragma vertex BasePassVertex
             #pragma fragment BasePassFragment
 
-            #include "ToonShadingCommon.hlsl"
+            #define _HAIRSHADING
+            #include "ToonHairInput.hlsl"
 
             half4 BasePassFragment(BasePassFragmentInput input) : SV_Target
             {
