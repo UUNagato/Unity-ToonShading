@@ -1,7 +1,8 @@
 #ifndef TOONSHADING_COMMON_HEADER
 #define TOONSHADING_COMMON_HEADER
 
-#include "ToonShadingLight.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 struct BasePassVertexInput
 {
@@ -20,21 +21,36 @@ struct BasePassFragmentInput
 };
 
 sampler2D _MainTex;
+sampler2D _NormalTex;
+
 CBUFFER_START(UnityPerMaterial)
     float4 _MainTex_ST;
+    half3 _DiffuseColorLow;
+    half3 _DiffuseColorMed;
+    half3 _DiffuseColorHigh;
+    half _LMOffset;
+    half _MHOffset;
+    half _DiffuseSoftness;
+    float4 _NormalTex_ST;
+
+    half3 _IndirectLightingColor;
+    half _IndirectLightingStrength;
 CBUFFER_END
+
+#include "ToonShadingLight.hlsl"
 
 half4 shadeFinalColor(BasePassFragmentInput input)
 {
     SurfaceData surface;
-    surface.albedo = tex2D(_MainTex, input.uv);
-    surface.normalWS = input.normalWS;
+    surface.normalWS = normalize(input.normalWS);
     surface.viewDirectionWS = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
     Light mainLight = GetMainLight();
 
+    surface.albedo = tex2D(_MainTex, input.uv);
+
     half3 mainLightResult = shadeMainLight(surface, mainLight);
 
-    half3 indirectLight = SampleSH(0);
+    half3 indirectLight = shadeIndirectLight(surface);
 
     return half4(mainLightResult + indirectLight, 1.0);
 }
