@@ -16,6 +16,7 @@ CBUFFER_START(UnityPerMaterial)
     half _LMOffset;
     half _MHOffset;
     half _DiffuseSoftness;
+    half _DirectLightMultiplier;
 
     half3 _IndirectLightingColor;
     half _IndirectLightingStrength;

@@ -23,6 +23,7 @@ half3 shadeMainLight(SurfaceData surface, Light light)
 
     half lightAttenuation = light.shadowAttenuation;
     lightAttenuation *= min(2, light.distanceAttenuation);
+    lightAttenuation *= _DirectLightMultiplier;
 
     return rampColor * surface.albedo.xyz * light.color * lightAttenuation;
 }
@@ -30,7 +31,7 @@ half3 shadeMainLight(SurfaceData surface, Light light)
 half3 shadeIndirectLight(SurfaceData surface)
 {
     half3 constAO = SampleSH(0);
-    return ((constAO + _IndirectLightingColor) * _IndirectLightingStrength);
+    return ((constAO + _IndirectLightingColor) * surface.albedo * _IndirectLightingStrength);
 }
 
 #endif

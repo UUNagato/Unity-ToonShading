@@ -10,6 +10,7 @@
         _LMOffset("Low Med Point", Range(-1, 1)) = -0.3
         _MHOffset("Med High Point", Range(-1, 1)) = 0.7
         _DiffuseSoftness("Softness", Range(0, 0.5)) = 0.05
+        _DirectLightMultiplier("Direct Light Multiplier", Range(0, 2)) = 1.0
 
         [Header(IndirectLighting)]
         [HDR]_IndirectLightingColor("Indirect Light Constant", Color) = (1, 0, 0, 1)

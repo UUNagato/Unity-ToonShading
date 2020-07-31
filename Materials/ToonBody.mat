@@ -74,17 +74,19 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DiffuseSoftness: 0.5
+    - _DiffuseSoftness: 0.17
+    - _DirectLightMultiplier: 0.5
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IndirectLightingStrength: 0.2
+    - _IndirectLightingStrength: 1
     - _LMOffset: -0.67
-    - _MHOffset: 0.2
+    - _MHOffset: 0.43
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _OutlineWidth: 0.549
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
@@ -98,9 +100,10 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DiffuseColorHigh: {r: 0.9433962, g: 0.87664646, b: 0.8783152, a: 1}
+    - _DiffuseColorHigh: {r: 0.9245283, g: 0.80678177, b: 0.80678177, a: 1}
     - _DiffuseColorLow: {r: 0.7830189, g: 0.38781595, b: 0.38781595, a: 1}
     - _DiffuseColorMed: {r: 0.8773585, g: 0.63462055, b: 0.624911, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _IndirectLightingColor: {r: 1, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
