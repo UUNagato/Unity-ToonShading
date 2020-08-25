@@ -1,27 +1,7 @@
 #ifndef TOONSHADING_COMMON_HEADER
 #define TOONSHADING_COMMON_HEADER
 
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
-sampler2D _MainTex;
-sampler2D _NormalMap;
-
-CBUFFER_START(UnityPerMaterial)
-    float4 _MainTex_ST;
-    half3 _DiffuseColorLow;
-    half3 _DiffuseColorMed;
-    half3 _DiffuseColorHigh;
-    half _LMOffset;
-    half _MHOffset;
-    half _DiffuseSoftness;
-    float4 _NormalMap_ST;
-    half _DirectLightMultiplier;
-
-    half3 _IndirectLightingColor;
-    half _IndirectLightingStrength;
-CBUFFER_END
 
 struct BasePassVertexInput
 {
@@ -41,6 +21,7 @@ struct BasePassFragmentInput
 #endif
     float2 uv : TEXCOORD0;
     float4 positionWSAndFogFactor : TEXCOORD2;
+    float4 shadowCoord : TEXCOORD6;
 };
 
 struct SurfaceData
@@ -69,6 +50,13 @@ BasePassFragmentInput BasePassVertex(BasePassVertexInput input)
     output.bitangentWS = vertexNormal.bitangentWS;
 #endif
     output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+
+#ifdef _MAIN_LIGHT_SHADOWS
+    output.shadowCoord = TransformWorldToShadowCoord(vertexPosition.positionWS);
+#else
+    output.shadowCoord = half4(0, 0, 0, 1);
+#endif
+
     return output;
 }
 
@@ -83,7 +71,7 @@ void InitializeSurfaceData(BasePassFragmentInput input, out SurfaceData surface)
     surface.normalWS = normalize(input.normalWS);
 #endif
     surface.viewDirectionWS = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
-    surface.albedo = tex2D(_MainTex, input.uv);
+    surface.albedo = tex2D(_MainTex, input.uv) * _MainColor;
 }
 
 half4 shadeFinalColor(BasePassFragmentInput input)
@@ -91,13 +79,26 @@ half4 shadeFinalColor(BasePassFragmentInput input)
     SurfaceData surface;
     InitializeSurfaceData(input, surface);
 
+#ifdef _MAIN_LIGHT_SHADOWS
+    Light mainLight = GetMainLight(input.shadowCoord);
+#else
     Light mainLight = GetMainLight();
+#endif
 
     half3 mainLightResult = shadeMainLight(surface, mainLight);
-
+    half3 specularLight = shadeSpecularColor(surface, mainLight);
     half3 indirectLight = shadeIndirectLight(surface);
 
-    return half4(mainLightResult + indirectLight, 1.0);
+    half3 finalColor = mainLightResult + specularLight + indirectLight;
+
+#if defined(_PREINTEGRATED_SUBSURFACE_SCATTERING)
+    half curvature = saturate(length(fwidth(input.normalWS)) / length(fwidth(input.positionWSAndFogFactor.xyz)));
+    half3 sssColor = shadeSubsurfaceScattering(surface, curvature, mainLight);
+
+    finalColor += sssColor;
+#endif
+
+    return half4(finalColor, 1.0);
 }
 
 #endif

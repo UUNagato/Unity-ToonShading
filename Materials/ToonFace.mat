@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: ToonFace
   m_Shader: {fileID: 4800000, guid: 2c46375afbd3fbd4fa47a945f7cbf0f2, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _PREINTEGRATED_SUBSURFACE_SCATTERING
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -51,7 +51,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SSSLUTTex:
+        m_Texture: {fileID: 2800000, guid: a9e6a7c372425eb46b8d37a703607f2a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecularTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -61,24 +69,29 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DiffuseSoftness: 0.26
-    - _DirectLightMultiplier: 0.5
+    - _DiffuseSoftness: 0.17
+    - _DirectLightMultiplier: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IndirectLightingStrength: 1
-    - _LMOffset: -0.7
-    - _MHOffset: -0.2
+    - _IndirectLightingStrength: 0.2
+    - _LMOffset: -0.78
+    - _MHOffset: -0.5
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.266
+    - _OutlineWidth: 0.7
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _SSSEnabled: 1
+    - _SSSMultiplier: 0.2
+    - _ShadowMultiplier: 0.35
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularMultiplier: 0.1
+    - _SpecularPower: 20
     - _SrcBlend: 1
     - _Surface: 0
     - _UseNormalMap: 0
@@ -87,10 +100,13 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DiffuseColorHigh: {r: 0.9433962, g: 0.87664646, b: 0.8783152, a: 1}
-    - _DiffuseColorLow: {r: 0.8679245, g: 0.50356, b: 0.50356, a: 1}
-    - _DiffuseColorMed: {r: 0.8773585, g: 0.63462055, b: 0.624911, a: 1}
+    - _DiffuseColorHigh: {r: 0.9433962, g: 0.6808473, b: 0.6808473, a: 1}
+    - _DiffuseColorLow: {r: 0.6792453, g: 0.20185119, b: 0.20185119, a: 1}
+    - _DiffuseColorMed: {r: 0.8207547, g: 0.45516744, b: 0.43747774, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _IndirectLightingColor: {r: 1, g: 0, b: 0, a: 1}
+    - _IndirectLightingColor: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+    - _MainColor: {r: 1, g: 0.8726415, b: 0.8726415, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SSSColor: {r: 0.8207547, g: 0.39989004, b: 0.38327694, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecularColor: {r: 1, g: 0.5896226, b: 0.6843613, a: 1}

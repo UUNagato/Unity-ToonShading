@@ -25,7 +25,9 @@ half3 ShadeHairSpecular(SurfaceData surface, Light light)
     half3 highSpec = _SpecularColorHigh * StrandSpecular(t1, surface.viewDirectionWS, light.direction, _SpecularHighShiftExp);
     half3 lowSpec = _SpecularColorLow * StrandSpecular(t2, surface.viewDirectionWS, light.direction, _SpecularLowShiftExp);
 
-    return lowSpec + highSpec;
+    half lightAttenuation = getStandardLightAttenuation(light);
+
+    return (lowSpec + highSpec) * lightAttenuation;
 }
 
 #endif

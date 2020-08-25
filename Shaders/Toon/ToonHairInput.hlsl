@@ -9,6 +9,7 @@ sampler2D _MainTex;
 sampler2D _ShiftTex;
 
 CBUFFER_START(UnityPerMaterial)
+    half4 _MainColor;
     float4 _MainTex_ST;
     half3 _DiffuseColorLow;
     half3 _DiffuseColorMed;
@@ -20,6 +21,8 @@ CBUFFER_START(UnityPerMaterial)
 
     half3 _IndirectLightingColor;
     half _IndirectLightingStrength;
+
+    half _ShadowMultiplier;
 
     float4 _ShiftTex_ST;
     half3 _SpecularColorLow;
@@ -46,6 +49,7 @@ struct BasePassFragmentInput
     float2 uv : TEXCOORD0;
     float2 shiftuv : TEXCOORD5;
     float4 positionWSAndFogFactor : TEXCOORD2;
+    float4 shadowCoord : TEXCOORD6;
 };
 
 struct SurfaceData
@@ -56,6 +60,10 @@ struct SurfaceData
     half3 tangentWS;
     float2 shiftuv;
 };
+
+// declare to avoid error report because of ToonShadingLight.hlsl
+half3 _SpecularColor;
+half _SpecularMultiplier;
 
 #include "ToonShadingLight.hlsl"
 #include "ToonShadingHairLight.hlsl"
@@ -76,6 +84,11 @@ BasePassFragmentInput BasePassVertex(BasePassVertexInput input)
 
     output.uv = TRANSFORM_TEX(input.uv, _MainTex);
     output.shiftuv = TRANSFORM_TEX(input.uv, _ShiftTex);
+#ifdef _MAIN_LIGHT_SHADOWS
+    output.shadowCoord = TransformWorldToShadowCoord(vertexPosition.positionWS);
+#else
+    output.shadowCoord = half4(0, 0, 0, 1);
+#endif
     return output;
 }
 
@@ -92,8 +105,11 @@ half4 shadeFinalColor(BasePassFragmentInput input)
 {
     SurfaceData surface;
     InitializeSurfaceData(input, surface);
-
+#ifdef _MAIN_LIGHT_SHADOWS
+    Light mainLight = GetMainLight(input.shadowCoord);
+#else
     Light mainLight = GetMainLight();
+#endif
 
     half3 mainLightResult = shadeMainLight(surface, mainLight);
 

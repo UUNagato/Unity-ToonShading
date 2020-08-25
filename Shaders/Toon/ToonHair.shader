@@ -24,6 +24,19 @@
         _SpecularLowShiftExp("Low Specular Exponent", Range(1, 500)) = 20
         _SpecularHighShiftExp("High Specular Exponent", Range(1, 500)) = 50
         _SpecularPower("Highlight Power", Range(0, 3)) = 0.8
+
+        [Header(Shadow)]
+        _ShadowMultiplier("Shadow Received Amount", Range(0, 1)) = 0.5
+
+        [Header(Outliner)]
+        [Space]
+        [Toggle(_USE_OUTLINE)]_UseOutline("Use Outline", Int) = 0
+        _OutlineWidth("Outline Width", Range(0,1)) = 0.05
+        _OutlineColor("Outline Color", Color) = (1, 1, 1, 1)
+
+        [Header(Override)]
+        [Space]
+        [Enum(UnityEngine.Rendering.CullMode)]_Cull("CullMode", float) = 2
     }
     SubShader
     {
@@ -36,12 +49,22 @@
                 "LightMode"="UniversalForward"
             }
 
+            Cull [_Cull]
+
             HLSLPROGRAM
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
+
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
+
             #pragma vertex BasePassVertex
-            #pragma fragment BasePassFragment
+            #pragma fragment BasePassFragment   
 
             #define _HAIRSHADING
             #include "ToonHairInput.hlsl"
@@ -51,6 +74,60 @@
                 return shadeFinalColor(input);
             }
 
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags {
+                "LightMode"="ShadowCaster"
+            }
+            ZWrite On
+            ZTest LEqual
+            Cull [_Cull]
+
+            HLSLPROGRAM
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
+            #pragma target 2.0
+            
+            #pragma shader_feature _ALPHATEST_ON
+            #pragma vertex ShadowVertex
+            #pragma fragment ShadowFragment
+
+            #include "ToonShadowInput.hlsl"
+
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags {
+                "LightMode"="DepthOnly"
+            }
+            ZWrite On
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            // Required to compile gles 2.0 with standard srp library
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
+            #pragma target 2.0
+
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment ShadowFragment
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature _ALPHATEST_ON
+
+            //--------------------------------------
+            // GPU Instancing
+            //#pragma multi_compile_instancing
+            #include "ToonShadowInput.hlsl"
             ENDHLSL
         }
     }

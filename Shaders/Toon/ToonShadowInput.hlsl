@@ -50,6 +50,29 @@ ShadowFragmentInput ShadowVertex(ShadowVertexInput input)
     return output;
 }
 
+ShadowFragmentInput DepthOnlyVertex(ShadowVertexInput input)
+{
+    ShadowFragmentInput output = (ShadowFragmentInput)0;
+    output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+    output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+    return output;
+}
+
+half Alpha(half albedoAlpha, half4 color, half cutoff)
+{
+#if !defined(_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A) && !defined(_GLOSSINESS_FROM_BASE_ALPHA)
+    half alpha = albedoAlpha * color.a;
+#else
+    half alpha = color.a;
+#endif
+
+#if defined(_ALPHATEST_ON)
+    clip(alpha - cutoff);
+#endif
+
+    return alpha;
+}
+
 half4 ShadowFragment(ShadowFragmentInput input) : SV_Target
 {
     Alpha(tex2D(_MainTex, input.uv).a, half4(0, 0, 0, 1), 0.0);
